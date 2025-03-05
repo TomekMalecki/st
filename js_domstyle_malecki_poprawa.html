@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>JavaScript i CSS</title>
+		<style>
+			body {
+				font-family: "Arial";
+				width: 960px;
+				margin: 50px auto;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>JavaScript i CSS</h1>
+        <br><br>
+		<h3>Lista zakupów</h3>
+
+		<form id="list-form">
+			<input type="text" id="item-input" />
+			<input type="submit" value="Dodaj" />
+			<ol id="shopping-list"></ol>
+		</form>
+
+		<script>
+			const shoppingList = [];
+
+			document.getElementById("list-form").addEventListener("submit", (event) => {
+					event.preventDefault();
+
+					const newItem = document.getElementById("item-input").value.trim();
+
+					// sprawdzamy czy uzytkownik nie wyslal pustego pola, oraz czy taka rzecz juz nie istnieje w liscie zakupow
+					if (
+                        !newItem ||
+						shoppingList
+							.map((item) => item.toLowerCase())
+							.includes(newItem.toLowerCase())
+					)
+						return;
+
+					shoppingList.push(newItem);
+					document.getElementById("shopping-list").innerHTML +=
+						"<li>" + newItem + "</li>";
+
+					document.getElementById("item-input").value = "";
+				});
+		</script>
+	</body>
+</html>

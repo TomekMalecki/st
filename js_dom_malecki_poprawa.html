@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<style>
+			body {
+				font-family: "Arial";
+				width: 960px;
+				margin: 50px auto;
+			}
+
+			#tytul-div {
+				width: fit-content;
+				background-color: rgb(135, 218, 135);
+			}
+
+			label {
+				display: block;
+				font-weight: 500;
+                
+                &.inline {
+                    display: inline;
+                    font-size: 14px;
+                }
+            }
+
+			textarea {
+				resize: none;
+                font-family: 'Arial';
+			}
+		</style>
+
+		<title>JS Dom</title>
+	</head>
+	<body>
+        <div id="tytul-div">
+            <h1 id="tytul">Skrypty JavaScript</h1>
+        </div>
+
+		<hr />
+
+		<h3>Zmiana treści nagłówka</h3>
+		<form id="zmien-tytul-form">
+			<label for="pole-tytul">Nowy tytuł</label>
+			<input type="text" id="pole-tytul" placeholder="np. Ala ma Kota" />
+			<input type="submit" value="Zastosuj" />
+		</form>
+
+		<br />
+		<hr />
+
+		<h3>Wstawianie tekstu do elementu <i>div</i></h3>
+		<div style="display: flex; gap: 70px">
+			<form id="wstaw-tekst-form">
+				<label for="pole-wstaw">Tekst do wstawienia</label>
+				<textarea id="pole-wstaw" rows="4" cols="30" placeholder="np. Nam strzelać nie kazano!"></textarea>
+				<input type="submit" value="Wstaw" />
+			</form>
+			<div id="div-do-wstawienia"></div>
+		</div>
+
+		<br />
+		<hr />
+
+		<h3>Zmiana właściwości CSS</h3>
+		<form id="kolor-h3-form">
+			<label for="kolor-h3"
+				>Zmiana koloru tła nagłowków <i>h3</i></label
+			>
+			<input type="text" id="kolor-h3" placeholder="np. blue, lub #abcdef" />
+			<input type="submit" value="Zmień" />
+		</form>
+		<br />
+		<form id="czcionka-h1-form">
+			<label for="czcionka-h1">Zmiana czcionki tytułu <i>h1</i></label>
+			<input type="text" id="czcionka-h1" placeholder="np. Consolas, lub sans-serif" />
+			<input type="submit" value="Zmień" />
+		</form>
+		<br />
+		<form id="wymiary-h1-form">
+			<label for="pole-wstaw">Zmiana rozmiaru pudełka z h1</label>
+            <label for="wysokosc-h1" class="inline">Wysokość (bez px)</label>
+			<input type="number" id="wysokosc-h1" min="0" placeholder="np. 123" />
+            <br>
+            <label for="szerokosc-h1" class="inline">Szerokość (bez px)</label>
+			<input type="number" id="szerokosc-h1" min="0" placeholder="np. 789" />
+            <br>
+			<input type="submit" value="Zmień" />
+		</form>
+
+		<br />
+		<hr />
+
+        <h3>Informacje o stronie</h3>
+		<ul id="informacje-o-stronie"></ul>
+
+		<script>
+			document.body.onload = () => {
+				let login;
+				let pass;
+
+				do {
+					login = prompt("Podaj login", "");
+					haslo = prompt("Podaj hasło", "");
+
+					if (login != "user1" || haslo != "pass1") {
+						alert("Nieprawidłowy login lub hasło!");
+					} else {
+						alert("Witaj user1 na stronie!");
+						return;
+					}
+				} while (login != "user1" || pass != "pass1");
+			};
+
+			const title = document.getElementById("tytul");
+			const titleBox = document.getElementById("tytul-div");
+			const changeTitleInput = document.getElementById("pole-tytul");
+			const insertTextInput = document.getElementById("pole-wstaw");
+			const h3ColorInput = document.getElementById("kolor-h3");
+			const h1FontInput = document.getElementById("czcionka-h1");
+			const h1HeightInput = document.getElementById("wysokosc-h1");
+			const h1WidthInput = document.getElementById("szerokosc-h1");
+
+			let currentTitle = "Skrypty JavaScript";
+
+			title.addEventListener("mouseover", (event) => {
+				title.innerText = "Tytuł najechany";
+			});
+			title.addEventListener("mouseout", (event) => {
+				title.innerText = currentTitle;
+			});
+
+			document.getElementById("zmien-tytul-form").addEventListener("submit", (event) => {
+				event.preventDefault();
+
+				const newTitle = changeTitleInput.value.trim();
+				if (!newTitle) return;
+
+				currentTitle = newTitle;
+				title.innerText = newTitle;
+
+				changeTitleInput.value = "";
+			});
+
+			document.getElementById("wstaw-tekst-form").addEventListener("submit", (event) => {
+				event.preventDefault();
+
+				const textToInsert = insertTextInput.value.trim();
+				if (!textToInsert) return;
+
+				document.getElementById("div-do-wstawienia").innerText += textToInsert;
+
+				insertTextInput.value = "";
+			});
+
+            document.getElementById("kolor-h3-form").addEventListener("submit", (event) => {
+				event.preventDefault();
+
+				const h3Color = h3ColorInput.value.trim();
+				if (!h3Color) return;
+
+				document.querySelectorAll("h3").forEach(h3 => h3.style.backgroundColor = h3Color);
+
+				h3ColorInput.value = "";
+			});
+            document.getElementById("czcionka-h1-form").addEventListener("submit", (event) => {
+				event.preventDefault();
+
+				const h1Font = h1FontInput.value.trim();
+				if (!h1Font) return;
+
+				title.style.fontFamily = h1Font;
+
+				h1FontInput.value = "";
+			});
+            document.getElementById("wymiary-h1-form").addEventListener("submit", (event) => {
+				event.preventDefault();
+
+				const h1Height = h1HeightInput.value;
+				const h1Width = h1WidthInput.value;
+				if (h1Height < 0 || h1Width < 0) return;
+
+				titleBox.style.height = h1Height + "px";
+				titleBox.style.width = h1Width + "px";
+
+				h1HeightInput.value = "";
+				h1WidthInput.value = "";
+			});
+
+            document.getElementById("informacje-o-stronie").innerHTML =
+				"<li>Typ dokumentu: <b>" + document.contentType + "</b></li>" +
+				"<li>Ilość formularzy na stronie: <b>" + document.getElementsByTagName("form").length + "</b></li>" +
+				"<li>Ostatnia modyfikacja dokumentu: <b>" + document.lastModified + "</b></li>" +
+				"<li>Nazwa dokumentu: <b>" + document.title + "</b></li>";
+        </script>
+	</body>
+</html>
